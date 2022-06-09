@@ -55,7 +55,7 @@ let pagination={
            })
            
 
-        //    element.classList.add("active")
+           element.classList.add("active")
 
            const fragmentedData=todoServices.getPageData(pageNumber,pagination.recordPerPage);
            functions.render(fragmentedData);

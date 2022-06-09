@@ -3,54 +3,51 @@ const addBtn=document.querySelector(".add");
 const todoList=document.querySelector('.list');
 
 
-
 const functions={
-    addToDo:async(event)=>{
+    addToDo:(event)=>{
         event.preventDefault();
         if(!todoInput.value||todoInput.value.trim().length===0) {
-            alert("no input!");
+            alert("no input!")
         }else{
             let todo=todoInput.value;
-            todoInput.value="";
-       
-        // pagination.showPag();
-        // pagination.render();
-        // pagination.gotToLastPage();
-        functions.appendElement(todo);
+        let newTodo={
+            task:todo,
+            status:false,
+            edit:false
         }
-    },
-    appendElement:async(newTodo)=> {
+
+        todoInput.value="";
+
+        todoServices.addToDo(newTodo);
+        functions.appendElement(newTodo);
+        pagination.showPag();
+        pagination.render();
+        pagination.gotToLastPage();
+    
+        }
         
-        try {
-            const {data}=await axios.post('/api/v1/todos',{name:newTodo});
-            console.log(data);
-            const item=functions.getItemView(data.newTodo);
-            todoList.appendChild(item);
-        }catch(error) {
-            console.log("error")
-        }
+        
+        
+       
+
+    },
+    appendElement:(newTodo)=> {
+        const item=functions.getItemView(newTodo);
+        todoList.appendChild(item);
     },
 
-    removeTodo:async(elem,itemId)=>{
-
-        // todoServices.removeTodo(itemId);
-                try {
-                    const {data}=await axios.delete(`/api/v1/todos/${itemId}`)
-                    console.log(data);
-                    functions.removeElement(elem.parentNode);
-                }catch(error) {
-
-                }
-             
-        //     let fragmented=todoServices.getPageData(pagination.currentPage,pagination.recordPerPage);
-        //     if(fragmented.length===0&&pagination.currentPage>1) {
-        //             pagination.prev();
-        //             fragmented=todoServices.getPageData(pagination.currentPage,pagination.recordPerPage);
+    removeTodo:(elem,itemId)=>{
+        todoServices.removeTodo(itemId);
+            functions.removeElement(elem.parentNode);
+            let fragmented=todoServices.getPageData(pagination.currentPage,pagination.recordPerPage);
+            if(fragmented.length===0&&pagination.currentPage>1) {
+                    pagination.prev();
+                    fragmented=todoServices.getPageData(pagination.currentPage,pagination.recordPerPage);
                   
-        //     }
-        //     functions.render(fragmented);
-        //     pagination.showPag();  
-        //     pagination.render(); 
+            }
+            functions.render(fragmented);
+            pagination.showPag();  
+            pagination.render(); 
               
 
     },
@@ -164,24 +161,16 @@ const functions={
         const elemParent=event.target.parentNode;
         functions.toggleEdit(elemParent,itemId);
     },
-    render:async()=>{
+    render:(todosList)=>{
         todoList.innerHTML="";
-        
-        try{
-            const {data}=await axios.get('/api/v1/todos');
-            if(data.data.length===0) {
-                todoList.innerText="No new todo yet, be cool and add new one"
-            }else{
-                data.data.forEach(item=>{
-                    const todo=functions.getItemView(item);
-                    todoList.appendChild(todo);
-                })
-            }
-
-        }catch(error) {
-            console.log(error);
+        if(todosList.length===0) {
+            todoList.innerText="No new todo yet, be cool and add new one"
+        }else{
+            todosList.forEach(item=>{
+                const todo=functions.getItemView(item);
+                todoList.appendChild(todo);
+            })
         }
-        
     },
 
 }

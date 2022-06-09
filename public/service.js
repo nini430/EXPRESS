@@ -5,21 +5,14 @@ let todoState = {
 
 
 let todoServices={
-    addToDo:async(newToDo)=> {
-        const {data}=await axios.post('/api/v1/todos',{newToDo});
-        console.log(data);
+    addToDo:(newToDo)=> {
+        newToDo.id=Math.random();
+        todoState.todos=[...todoState.todos,newToDo];
     },
-    removeTodo:async(itemId)=> {
-        
-        try {
-            const {data}=await axios.get('/api/v1/todos')
-            console.log(data);
-        }catch(error) {
-            console.log(error);
-        }
+    removeTodo:(itemId)=> {
+        const filtered=todoState.todos.filter(item=>item.id!== +itemId);
 
-
-        
+        todoState.todos=[...filtered];
     },
     toggleComplete:(itemId)=> {
         let currenttodo;

@@ -1,13 +1,17 @@
-const express=require("express");
+
+const express=require('express');
 const router=express.Router();
-const {getAllTodoItem,createToDoItem,updateToDoItem,deleteAllTodos}=require("../controllers/tasks");
 
+const {getAllToDos,createToDo,getToDo,updateTodo,deleteTodo}=require('../controllers/tasks');
 
-router.route("/").get(getAllTodoItem).post(createToDoItem);
-router.route("/:id").put(updateToDoItem).delete(deleteAllTodos);
-
+router.get("/",getAllToDos);
+router.post("/",createToDo);
+router.get("/:id",getToDo);
+router.patch("/:id",updateTodo);
+router.delete("/:id",deleteTodo);
 
 module.exports=router;
+
 
 
 
